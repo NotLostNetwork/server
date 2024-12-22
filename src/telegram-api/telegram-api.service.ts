@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { Api, TelegramClient } from "telegram"
 import { StringSession } from 'telegram/sessions';
 
@@ -7,6 +7,8 @@ import { Buffer } from "buffer"
 
 @Injectable()
 export class TelegramApiService {
+  private readonly logger = new Logger(TelegramApiService.name);
+  
   private client: TelegramClient
 
   // Avatars
@@ -26,7 +28,7 @@ export class TelegramApiService {
     )
     this.client.start({
       botAuthToken: process.env.TELEGRAM_BOT_TOKEN
-    }).then(() => console.log(this.client.session.save()))
+    }).then(() => this.logger.log(this.client.session.save()))
     
     //this.client.connect()
   }
