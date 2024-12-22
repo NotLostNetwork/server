@@ -6,7 +6,7 @@ import Photo = Api.Photo
 import { Buffer } from "buffer"
 
 @Injectable()
-export class TelegramApiService implements OnModuleInit {
+export class TelegramApiService {
   private client: TelegramClient
 
   // Avatars
@@ -17,19 +17,14 @@ export class TelegramApiService implements OnModuleInit {
 
   constructor() {
     this.client = new TelegramClient(
-      new StringSession(""),
+      new StringSession(process.env.TELEGRAM_SESSION),
       Number(process.env.TELEGRAM_API_ID),
       process.env.TELEGRAM_API_HASH!,
       {
         connectionRetries: 5,
       }
     )
-  }
-
-  onModuleInit() {
-    this.client.start({
-      botAuthToken: process.env.TELEGRAM_BOT_TOKEN,
-    })
+    this.client.connect()
   }
 
   async getUserByUsername(username: string) {
