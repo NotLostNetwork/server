@@ -17,14 +17,18 @@ export class TelegramApiService {
 
   constructor() {
     this.client = new TelegramClient(
-      new StringSession(process.env.TELEGRAM_SESSION),
+      new StringSession(""),
       Number(process.env.TELEGRAM_API_ID),
       process.env.TELEGRAM_API_HASH!,
       {
         connectionRetries: 5,
       }
     )
-    this.client.connect()
+    this.client.start({
+      botAuthToken: process.env.TELEGRAM_BOT_TOKEN
+    }).then(() => console.log(this.client.session.save()))
+    
+    //this.client.connect()
   }
 
   async getUserByUsername(username: string) {
