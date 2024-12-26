@@ -1,16 +1,15 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { NestFactory } from "@nestjs/core"
+import { AppModule } from "./app.module"
 import {
   FastifyAdapter,
   NestFastifyApplication,
-} from '@nestjs/platform-fastify';
-import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
+} from "@nestjs/platform-fastify"
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter(),
-  );
+    new FastifyAdapter()
+  )
 
   /* const corsOptions: CorsOptions = {
     origin: process.env.DEV ? true : [process.env.FRONT_URL],
@@ -18,9 +17,9 @@ async function bootstrap() {
     credentials: true,
   }; */
 
-  app.setGlobalPrefix('api/v1');
-  app.enableCors();
+  app.setGlobalPrefix("api/v1")
+  app.enableCors()
 
-  await app.listen(process.env.PORT, '0.0.0.0');
+  await app.listen(process.env.PORT, "0.0.0.0")
 }
-bootstrap();
+bootstrap()

@@ -1,15 +1,14 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { Injectable } from "@nestjs/common"
 import { Api, TelegramClient } from "telegram"
-import { StringSession } from 'telegram/sessions';
+import { StoreSession } from "telegram/sessions"
 
 import Photo = Api.Photo
 import { Buffer } from "buffer"
 
 @Injectable()
 export class TelegramApiService {
-  private readonly logger = new Logger(TelegramApiService.name);
-  
   private client: TelegramClient
+  private storeSession = new StoreSession("my_session")
 
   // Avatars
   private avatarsQueue: (() => Promise<void>)[] = []
@@ -19,18 +18,17 @@ export class TelegramApiService {
 
   constructor() {
     this.client = new TelegramClient(
-      new StringSession(""),
+      this.storeSession,
       Number(process.env.TELEGRAM_API_ID),
       process.env.TELEGRAM_API_HASH!,
       {
         connectionRetries: 5,
       }
     )
+
     this.client.start({
-      botAuthToken: process.env.TELEGRAM_BOT_TOKEN
-    }).then(() => this.logger.log(this.client.session.save()))
-    
-    //this.client.connect()
+      botAuthToken: process.env.TELEGRAM_BOT_TOKEN,
+    })
   }
 
   async getUserByUsername(username: string) {
