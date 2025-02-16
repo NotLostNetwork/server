@@ -32,12 +32,20 @@ export class TelegramApiService {
   }
 
   async getUserByUsername(username: string) {
-    const result = await this.client.invoke(
+    const user = await this.client.invoke(
       new Api.users.GetUsers({
         id: [username],
       })
     )
-    return result
+
+    if (user) return user
+
+    const channel = await this.client.invoke(
+      new Api.channels.GetChannels({
+        id: [username],
+      })
+    )
+    return channel
   }
 
   async getUserAvatar(username: string): Promise<Buffer> {
